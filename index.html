@@ -25,24 +25,33 @@ h1 {
     text-align: center;
 }
 
-/* Міньйон трохи вище */
+/* Міньйон */
 #minion {
     width: 180px;
     margin-bottom: 40px;
 }
 
-/* Кнопки зафіксовані */
+/* Контейнер кнопок — фіксований */
 .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 40px;
-    height: 80px; /* фіксована висота */
+}
+
+/* Кнопки фіксованого розміру */
+.button-wrap {
+    width: 160px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 button {
+    width: 100%;
+    height: 100%;
     font-size: 24px;
-    padding: 15px 30px;
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -76,29 +85,28 @@ button {
 
 <body>
 
-<h1>Ти будеш моєю валентинкою? 💕</h1>
+<h1 id="question">Ти будеш моєю валентинкою? 💕</h1>
 
 <div class="container">
 
-    <!-- Міньйон -->
     <img src="minion.jpg" id="minion">
 
-    <!-- Кнопки -->
     <div class="buttons" id="buttons">
-        <button id="yes">Так ❤️</button>
-        <button id="no">Ні 💔</button>
+        <div class="button-wrap">
+            <button id="yes">Так ❤️</button>
+        </div>
+        <div class="button-wrap">
+            <button id="no">Ні 💔</button>
+        </div>
     </div>
 
-    <!-- Результат -->
     <div id="result">
         уря :3 цьомчік 💖
     </div>
 
-    <!-- Котик -->
     <img src="cat.jpg" id="cat">
 </div>
 
-<!-- Конфетті -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
@@ -108,6 +116,7 @@ const minion = document.getElementById("minion");
 const cat = document.getElementById("cat");
 const result = document.getElementById("result");
 const buttons = document.getElementById("buttons");
+const question = document.getElementById("question");
 
 let yesScale = 1;
 let noScale = 1;
@@ -136,13 +145,14 @@ noBtn.onclick = () => {
     noBtn.style.transform = `scale(${noScale})`;
 
     if (noScale === 0) {
-        noBtn.style.display = "none";
+        noBtn.style.visibility = "hidden";
     }
 };
 
 yesBtn.onclick = () => {
     buttons.style.display = "none";
     minion.style.display = "none";
+    question.style.display = "none";
 
     result.style.display = "block";
     cat.style.display = "block";
