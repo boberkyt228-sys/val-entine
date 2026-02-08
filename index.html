@@ -1,3 +1,114 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Валентинка 💘</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: #ffe6f0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    position: absolute;
+    top: 30px;
+    color: #d63384;
+}
+
+.container {
+    text-align: center;
+}
+
+/* Міньйон */
+#minion {
+    width: 180px;
+    margin-bottom: 40px;
+}
+
+/* Контейнер кнопок — фіксований */
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+/* Кнопки фіксованого розміру */
+.button-wrap {
+    width: 160px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    width: 100%;
+    height: 100%;
+    font-size: 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    transform-origin: center;
+}
+
+#yes {
+    background: #ff4d6d;
+    color: white;
+}
+
+#no {
+    background: #adb5bd;
+    color: white;
+}
+
+#cat {
+    width: 220px;
+    display: none;
+    margin: 20px auto;
+}
+
+#result {
+    font-size: 36px;
+    color: #d63384;
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="question">Ти будеш моєю валентинкою? 💕</h1>
+
+<div class="container">
+
+    <img src="minion.jpg" id="minion">
+
+    <div class="buttons" id="buttons">
+        <div class="button-wrap">
+            <button id="yes">Так ❤️</button>
+        </div>
+        <div class="button-wrap">
+            <button id="no">Ні 💔</button>
+        </div>
+    </div>
+
+    <div id="result">
+        Я знав(ла), що ти погодишся 💖
+    </div>
+
+    <img src="cat.jpg" id="cat">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <script>
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
@@ -10,8 +121,6 @@ const question = document.getElementById("question");
 let yesScale = 1;
 let noScale = 1;
 let noClicks = 0;
-let chaos = false;
-let chaosInterval;
 
 const noTexts = [
     "Ні 💔",
@@ -19,48 +128,28 @@ const noTexts = [
     "чо",
     "точно?",
     "подумай краще",
-    "Нажми кнопку зліва"
+    "тобі понрав, вибери кнопку зліва"
 ];
 
-function startChaos() {
-    chaos = true;
-
-    noBtn.style.position = "fixed";
-    noBtn.style.zIndex = "9999";
-    noBtn.style.pointerEvents = "none"; // ВЗАГАЛІ НЕМОЖЛИВО КЛІКНУТИ
-
-    chaosInterval = setInterval(() => {
-        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-        noBtn.style.left = x + "px";
-        noBtn.style.top = y + "px";
-    }, 40); // шалена швидкість
-}
-
 noBtn.onclick = () => {
-    if (chaos) return;
-
     noClicks++;
-
     if (noClicks < noTexts.length) {
         noBtn.textContent = noTexts[noClicks];
     }
 
     yesScale += 0.2;
     noScale -= 0.15;
-    if (noScale < 0.3) noScale = 0.3;
+    if (noScale < 0.2) noScale = 0;
 
     yesBtn.style.transform = `scale(${yesScale})`;
     noBtn.style.transform = `scale(${noScale})`;
 
-    if (noClicks === noTexts.length - 1) {
-        setTimeout(startChaos, 300);
+    if (noScale === 0) {
+        noBtn.style.visibility = "hidden";
     }
 };
 
 yesBtn.onclick = () => {
-    clearInterval(chaosInterval);
-
     buttons.style.display = "none";
     minion.style.display = "none";
     question.style.display = "none";
@@ -75,3 +164,6 @@ yesBtn.onclick = () => {
     });
 };
 </script>
+
+</body>
+</html>
