@@ -1,151 +1,66 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-<meta charset="UTF-8">
-<title>Валентинка 💘</title>
-
-<style>
-body {
-    margin: 0;
-    height: 100vh;
-    background: #ffe6f0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-h1 {
-    position: absolute;
-    top: 30px;
-    color: #d63384;
-}
-
-.container {
-    text-align: center;
-    position: relative;
-}
-
-/* Міньйон */
-#minion {
-    width: 180px;
-    margin-bottom: 40px;
-}
-
-/* Поле для кнопок */
-.buttons-area {
-    position: relative;
-    width: 400px;
-    height: 150px;
-    margin: 0 auto;
-}
-
-/* Обгортка кнопок */
-.button-wrap {
-    position: absolute;
-    width: 160px;
-    height: 70px;
-}
-
-#yes-wrap {
-    left: 0;
-    top: 40px;
-}
-
-#no-wrap {
-    right: 0;
-    top: 40px;
-}
-
-button {
-    width: 100%;
-    height: 100%;
-    font-size: 24px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-}
-
-#yes {
-    background: #ff4d6d;
-    color: white;
-}
-
-#no {
-    background: #adb5bd;
-    color: white;
-}
-
-#cat {
-    width: 220px;
-    display: none;
-    margin: 20px auto;
-}
-
-#result {
-    font-size: 36px;
-    color: #d63384;
-    display: none;
-}
-</style>
-</head>
-
-<body>
-
-<h1 id="question">Ти будеш моєю валентинкою? 💕</h1>
-
-<div class="container">
-
-    <img src="minion.jpg" id="minion">
-
-    <!-- Поле для кнопок -->
-    <div class="buttons-area" id="buttons">
-
-        <div class="button-wrap" id="yes-wrap">
-            <button id="yes">Так ❤️</button>
-        </div>
-
-        <div class="button-wrap" id="no-wrap">
-            <button id="no">Ні 💔</button>
-        </div>
-
-    </div>
-
-    <div id="result">
-        Я знав(ла), що ти погодишся 💖
-    </div>
-
-    <img src="cat.jpg" id="cat">
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
 <script>
-const noWrap = document.getElementById("no-wrap");
 const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
 const minion = document.getElementById("minion");
 const cat = document.getElementById("cat");
 const result = document.getElementById("result");
 const buttons = document.getElementById("buttons");
 const question = document.getElementById("question");
 
-// Кнопка "Ні" тікає
-noWrap.addEventListener("mouseenter", () => {
-    const area = buttons.getBoundingClientRect();
-    const btn = noWrap.getBoundingClientRect();
+let yesScale = 1;
+let noScale = 1;
+let noClicks = 0;
+let chaos = false;
+let chaosInterval;
 
-    const maxX = area.width - btn.width;
-    const maxY = area.height - btn.height;
+const noTexts = [
+    "Ні 💔",
+    "ей",
+    "чо",
+    "точно?",
+    "подумай краще",
+    "Нажми кнопку зліва"
+];
 
-    const randomX = Math.random() * maxX;
-    const randomY = Math.random() * maxY;
+function startChaos() {
+    chaos = true;
 
-    noWrap.style.left = randomX + "px";
-    noWrap.style.top = randomY + "px";
-});
+    noBtn.style.position = "fixed";
+    noBtn.style.zIndex = "9999";
+    noBtn.style.pointerEvents = "none"; // ВЗАГАЛІ НЕМОЖЛИВО КЛІКНУТИ
 
-// На "Так"
+    chaosInterval = setInterval(() => {
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+    }, 40); // шалена швидкість
+}
+
+noBtn.onclick = () => {
+    if (chaos) return;
+
+    noClicks++;
+
+    if (noClicks < noTexts.length) {
+        noBtn.textContent = noTexts[noClicks];
+    }
+
+    yesScale += 0.2;
+    noScale -= 0.15;
+    if (noScale < 0.3) noScale = 0.3;
+
+    yesBtn.style.transform = `scale(${yesScale})`;
+    noBtn.style.transform = `scale(${noScale})`;
+
+    if (noClicks === noTexts.length - 1) {
+        setTimeout(startChaos, 300);
+    }
+};
+
 yesBtn.onclick = () => {
+    clearInterval(chaosInterval);
+
     buttons.style.display = "none";
     minion.style.display = "none";
     question.style.display = "none";
@@ -160,6 +75,3 @@ yesBtn.onclick = () => {
     });
 };
 </script>
-
-</body>
-</html>
