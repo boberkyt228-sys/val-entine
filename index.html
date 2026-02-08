@@ -23,6 +23,7 @@ h1 {
 
 .container {
     text-align: center;
+    position: relative;
 }
 
 /* Міньйон */
@@ -31,21 +32,29 @@ h1 {
     margin-bottom: 40px;
 }
 
-/* Контейнер кнопок — фіксований */
-.buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
+/* Поле для кнопок */
+.buttons-area {
+    position: relative;
+    width: 400px;
+    height: 150px;
+    margin: 0 auto;
 }
 
-/* Кнопки фіксованого розміру */
+/* Обгортка кнопок */
 .button-wrap {
+    position: absolute;
     width: 160px;
     height: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+}
+
+#yes-wrap {
+    left: 0;
+    top: 40px;
+}
+
+#no-wrap {
+    right: 0;
+    top: 40px;
 }
 
 button {
@@ -55,8 +64,6 @@ button {
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    transition: transform 0.3s ease;
-    transform-origin: center;
 }
 
 #yes {
@@ -91,17 +98,21 @@ button {
 
     <img src="minion.jpg" id="minion">
 
-    <div class="buttons" id="buttons">
-        <div class="button-wrap">
+    <!-- Поле для кнопок -->
+    <div class="buttons-area" id="buttons">
+
+        <div class="button-wrap" id="yes-wrap">
             <button id="yes">Так ❤️</button>
         </div>
-        <div class="button-wrap">
+
+        <div class="button-wrap" id="no-wrap">
             <button id="no">Ні 💔</button>
         </div>
+
     </div>
 
     <div id="result">
-        уря :3 цьомчік 💖
+        Я знав(ла), що ти погодишся 💖
     </div>
 
     <img src="cat.jpg" id="cat">
@@ -110,45 +121,30 @@ button {
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
+const noWrap = document.getElementById("no-wrap");
 const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
 const minion = document.getElementById("minion");
 const cat = document.getElementById("cat");
 const result = document.getElementById("result");
 const buttons = document.getElementById("buttons");
 const question = document.getElementById("question");
 
-let yesScale = 1;
-let noScale = 1;
-let noClicks = 0;
+// Кнопка "Ні" тікає
+noWrap.addEventListener("mouseenter", () => {
+    const area = buttons.getBoundingClientRect();
+    const btn = noWrap.getBoundingClientRect();
 
-const noTexts = [
-    "Ні 💔",
-    "ей",
-    "чо",
-    "точно?",
-    "подумай краще",
-    "вибери кнопку зліва"
-];
+    const maxX = area.width - btn.width;
+    const maxY = area.height - btn.height;
 
-noBtn.onclick = () => {
-    noClicks++;
-    if (noClicks < noTexts.length) {
-        noBtn.textContent = noTexts[noClicks];
-    }
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
 
-    yesScale += 0.2;
-    noScale -= 0.15;
-    if (noScale < 0.2) noScale = 0;
+    noWrap.style.left = randomX + "px";
+    noWrap.style.top = randomY + "px";
+});
 
-    yesBtn.style.transform = `scale(${yesScale})`;
-    noBtn.style.transform = `scale(${noScale})`;
-
-    if (noScale === 0) {
-        noBtn.style.visibility = "hidden";
-    }
-};
-
+// На "Так"
 yesBtn.onclick = () => {
     buttons.style.display = "none";
     minion.style.display = "none";
