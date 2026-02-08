@@ -25,35 +25,39 @@ h1 {
     text-align: center;
 }
 
+/* Міньйон трохи вище */
+#minion {
+    width: 180px;
+    margin-bottom: 40px;
+}
+
+/* Кнопки зафіксовані */
 .buttons {
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    height: 80px; /* фіксована висота */
 }
 
 button {
     font-size: 24px;
     padding: 15px 30px;
-    margin: 20px;
     border: none;
     border-radius: 12px;
     cursor: pointer;
     transition: transform 0.3s ease;
+    transform-origin: center;
 }
 
 #yes {
     background: #ff4d6d;
     color: white;
-    z-index: 2;
 }
 
 #no {
     background: #adb5bd;
     color: white;
-    z-index: 1;
-}
-
-#minion {
-    width: 180px;
-    margin-bottom: 20px;
 }
 
 #cat {
@@ -79,6 +83,7 @@ button {
     <!-- Міньйон -->
     <img src="minion.jpg" id="minion">
 
+    <!-- Кнопки -->
     <div class="buttons" id="buttons">
         <button id="yes">Так ❤️</button>
         <button id="no">Ні 💔</button>
@@ -86,7 +91,7 @@ button {
 
     <!-- Результат -->
     <div id="result">
-        Я знав(ла), що ти погодишся 💖
+        уря :3 цьомчік 💖
     </div>
 
     <!-- Котик -->
@@ -117,26 +122,20 @@ const noTexts = [
     "тобі понрав, вибери кнопку зліва"
 ];
 
-function isOverlapping(el1, el2) {
-    const r1 = el1.getBoundingClientRect();
-    const r2 = el2.getBoundingClientRect();
-    return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
-}
-
 noBtn.onclick = () => {
     noClicks++;
     if (noClicks < noTexts.length) {
         noBtn.textContent = noTexts[noClicks];
     }
 
-    yesScale += 0.25;
-    noScale -= 0.1;
-    if (noScale < 0.3) noScale = 0.3;
+    yesScale += 0.2;
+    noScale -= 0.15;
+    if (noScale < 0.2) noScale = 0;
 
     yesBtn.style.transform = `scale(${yesScale})`;
     noBtn.style.transform = `scale(${noScale})`;
 
-    if (isOverlapping(yesBtn, noBtn)) {
+    if (noScale === 0) {
         noBtn.style.display = "none";
     }
 };
