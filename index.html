@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Валентинка 💘</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: #ffe6f0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    position: absolute;
+    top: 30px;
+    color: #d63384;
+}
+
+.container {
+    text-align: center;
+}
+
+.buttons {
+    position: relative;
+}
+
+button {
+    font-size: 24px;
+    padding: 15px 30px;
+    margin: 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#yes {
+    background: #ff4d6d;
+    color: white;
+    z-index: 2;
+}
+
+#no {
+    background: #adb5bd;
+    color: white;
+    z-index: 1;
+}
+
+#minion {
+    width: 180px;
+    margin-bottom: 20px;
+}
+
+#cat {
+    width: 220px;
+    display: none;
+    margin: 20px auto;
+}
+
+#result {
+    font-size: 36px;
+    color: #d63384;
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Ти будеш моєю валентинкою? 💕</h1>
+
+<div class="container">
+
+    <!-- Міньйон -->
+    <img src="minion.jpg" id="minion">
+
+    <div class="buttons" id="buttons">
+        <button id="yes">Так ❤️</button>
+        <button id="no">Ні 💔</button>
+    </div>
+
+    <!-- Результат -->
+    <div id="result">
+        Я знав(ла), що ти погодишся 💖
+    </div>
+
+    <!-- Котик -->
+    <img src="cat.jpg" id="cat">
+</div>
+
+<!-- Конфетті -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const minion = document.getElementById("minion");
+const cat = document.getElementById("cat");
+const result = document.getElementById("result");
+const buttons = document.getElementById("buttons");
+
+let yesScale = 1;
+let noScale = 1;
+let noClicks = 0;
+
+const noTexts = [
+    "Ні 💔",
+    "ей",
+    "чо",
+    "точно?",
+    "подумай краще",
+    "тобі понрав, вибери кнопку зліва"
+];
+
+function isOverlapping(el1, el2) {
+    const r1 = el1.getBoundingClientRect();
+    const r2 = el2.getBoundingClientRect();
+    return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
+}
+
+noBtn.onclick = () => {
+    noClicks++;
+    if (noClicks < noTexts.length) {
+        noBtn.textContent = noTexts[noClicks];
+    }
+
+    yesScale += 0.25;
+    noScale -= 0.1;
+    if (noScale < 0.3) noScale = 0.3;
+
+    yesBtn.style.transform = `scale(${yesScale})`;
+    noBtn.style.transform = `scale(${noScale})`;
+
+    if (isOverlapping(yesBtn, noBtn)) {
+        noBtn.style.display = "none";
+    }
+};
+
+yesBtn.onclick = () => {
+    buttons.style.display = "none";
+    minion.style.display = "none";
+
+    result.style.display = "block";
+    cat.style.display = "block";
+
+    confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+    });
+};
+</script>
+
+</body>
+</html>
